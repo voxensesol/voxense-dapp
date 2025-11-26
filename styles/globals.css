@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-vox_bg text-white;
+  font-family: system-ui, sans-serif;
+}

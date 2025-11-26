@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>VOXENSE Workflow – Node to Marketplace</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #020612;
+      --card: #05091a;
+      --border: #1a2335;
+      --neon: #b5ff3b;
+      --neon-soft: #76ff9f;
+      --text-main: #f5f7ff;
+      --text-sub: #9ca3c7;
+      --accent: #35e0aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #071932 0, var(--bg) 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .wrapper {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 8px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--text-sub);
+    }
+
+    .headline {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .headline span {
+      color: var(--neon);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-sub);
+      max-width: 640px;
+      margin: 0 auto 28px auto;
+    }
+
+    .flow-container {
+      position: relative;
+      margin-top: 8px;
+      padding: 24px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #050918, #020612);
+      border: 1px solid rgba(181, 255, 59, 0.2);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(220px, 1fr));
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon) transparent;
+    }
+
+    .flow-grid::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .flow-grid::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .flow-grid::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, var(--neon), var(--accent));
+      border-radius: 999px;
+    }
+
+    .step-card {
+      position: relative;
+      background: radial-gradient(circle at top left, #0f1930 0, var(--card) 45%);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      padding: 14px 14px 16px 14px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--neon-soft);
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(181, 255, 59, 0.4);
+      background: rgba(2, 8, 24, 0.9);
+      align-self: flex-start;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--neon);
+      box-shadow: 0 0 8px var(--neon);
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .step-title span {
+      color: var(--accent);
+    }
+
+    .step-desc {
+      font-size: 12px;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .step-list {
+      margin-top: 4px;
+      padding-left: 14px;
+      font-size: 11.5px;
+      color: var(--text-sub);
+    }
+
+    .step-list li {
+      margin-bottom: 3px;
+    }
+
+    .arrow {
+      position: absolute;
+      right: -16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--neon));
+      opacity: 0.7;
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      right: -4px;
+      top: -3px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid var(--neon);
+      filter: drop-shadow(0 0 4px var(--neon));
+    }
+
+    .step-card:last-child .arrow {
+      display: none;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 11.5px;
+      color: var(--text-sub);
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 18px;
+      }
+      .headline {
+        font-size: 22px;
+      }
+      .subtitle {
+        font-size: 12px;
+      }
+      .flow-container {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="title">VOXENSE · SPATIAL DEPIN WORKFLOW</div>
+    <div class="headline">
+      From <span>Node Sensing</span> to <span>Marketplace Tiles</span>
+    </div>
+    <p class="subtitle">
+      A visual overview of how VOXENSE transforms real-world sensor activity
+      into verifiable on-chain proofs, spatial data tiles, and marketplace
+      assets that reward participating nodes.
+    </p>
+
+    <div class="flow-container">
+      <div class="flow-grid">
+
+        <!-- 1. Sensing -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 1
+          </div>
+          <div class="step-title">Node <span>Sensing</span> Layer</div>
+          <p class="step-desc">
+            Mobile or IoT devices act as VOXENSE nodes, capturing the physical world in real time.
+          </p>
+          <ul class="step-list">
+            <li>GPS position</li>
+            <li>Motion (accelerometer & gyro)</li>
+            <li>Ambient (light, temp, humidity)</li>
+            <li>Audio fingerprints (patterns, not raw sound)</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 2. Local privacy engine -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 2
+          </div>
+          <div class="step-title">Local <span>Privacy Engine</span></div>
+          <p class="step-desc">
+            All processing happens on-device. Raw sensor data is never uploaded or stored on-chain.
+          </p>
+          <ul class="step-list">
+            <li>Hash readings into fingerprints (SHA-256)</li>
+            <li>Sign payload with Ed25519</li>
+            <li>Build compact proof package</li>
+            <li>Discard raw sensor content</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 3. SDK transport -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 3
+          </div>
+          <div class="step-title">VOXENSE <span>SDK Transport</span></div>
+          <p class="step-desc">
+            The SDK sends the hashed and signed proof to the on-chain program over Solana RPC.
+          </p>
+          <ul class="step-list">
+            <li>Python & TypeScript client APIs</li>
+            <li>Standardized proof payload format</li>
+            <li>Submit transactions to <code>voxense-core</code></li>
+            <li>Listen for PoS verification events</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 4. PoS engine -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 4
+          </div>
+          <div class="step-title">On-Chain <span>Proof-of-Sensing</span></div>
+          <p class="step-desc">
+            The core VOXENSE program verifies that each proof is valid and consistent with reality.
+          </p>
+          <ul class="step-list">
+            <li>Check node registration & ownership</li>
+            <li>Validate signature & structure</li>
+            <li>Cross-node spatial & temporal correlation</li>
+            <li>Accept or reject as Verified Reality</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 5. Spatial ledger & aggregation -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 5
+          </div>
+          <div class="step-title">Spatial <span>Ledger & Aggregation</span></div>
+          <p class="step-desc">
+            Accepted proofs are written into the Spatial Ledger and grouped into spatial data tiles.
+          </p>
+          <ul class="step-list">
+            <li>Store node, sensor type, hash, timestamp</li>
+            <li>Aggregate proofs by region & time window</li>
+            <li>Build GPS / motion / ambient / audio tiles</li>
+            <li>Prepare encrypted off-chain data bundles</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 6. Marketplace -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 6
+          </div>
+          <div class="step-title">Spatial <span>Marketplace</span></div>
+          <p class="step-desc">
+            Verified tiles become economic assets that can be discovered and purchased by buyers.
+          </p>
+          <ul class="step-list">
+            <li>List encrypted spatial tiles</li>
+            <li>Show verification metadata</li>
+            <li>Price tiles in $VOX</li>
+            <li>Enable AI, robotics & research use cases</li>
+          </ul>
+          <div class="arrow"></div>
+        </div>
+
+        <!-- 7. Rewards -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="dot"></span>
+            STEP 7
+          </div>
+          <div class="step-title">Node <span>Rewards</span> Flow</div>
+          <p class="step-desc">
+            Node operators are rewarded when their validated sensing data contributes to sold tiles.
+          </p>
+          <ul class="step-list">
+            <li>Buyer pays in $VOX</li>
+            <li>Marketplace fee is taken</li>
+            <li>Remaining value goes to reward pool</li>
+            <li>Contributors are paid based on reputation & contribution</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="footer-note">
+        Full loop: <strong>Node sensing → Local hashing → On-chain PoS → Spatial tiles → Marketplace → Node rewards.</strong>
+      </p>
+    </div>
+  </div>
+</body>
+</html>
